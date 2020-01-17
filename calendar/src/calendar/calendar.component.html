@@ -1,0 +1,50 @@
+<div class="calendarGrid"
+    role="grid"
+    aria-readonly="true">
+    <div class="calendarTop"
+        role="row">
+        <div class="calendarTopLeft">GMT-8</div>
+        <ng-container *ngFor="let viewDay of viewDays; let viewDayIndex = index;">
+            <div class="dateHeader"
+                role="columnheader"
+                tabindex="-1"
+                id="{{'date_header_' + viewDayIndex}}">
+                <div>{{viewDay.dayOfWeek}}</div>
+                <div>{{viewDay.dayNumber}}</div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="calendarBottom">
+        <div class="calendarLeft"
+            aria-hidden="true"
+            tabindex="-1">
+            <div class="displayHour"></div> <!-- Spacer for before 1AM -->
+            <ng-container *ngFor="let displayHour of displayHours">
+                <div class="displayHour">
+                    <div>{{displayHour}}</div>
+                </div>
+            </ng-container>
+        </div>
+        <div class="calendarRight"
+            role="presentation"
+            tabindex="-1">
+            <div role="row">
+                <div class="hourHorizontalLines"
+                    aria-hidden="true">
+                    <div></div> <!-- Spacer for before 1AM -->
+                    <ng-container *ngFor="let displayHour of displayHours">
+                        <div></div>
+                    </ng-container>
+                </div>
+                <div class="hourRightSpacer"></div>
+                <ng-container *ngFor="let viewDay of viewDays; let viewDayIndex = index;">
+                    <div role="gridcell"
+                        tabindex="-1"
+                        attr.aria-labelledby="{{'date_header_' + viewDayIndex}}">
+                        <!-- Fill height? -->
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

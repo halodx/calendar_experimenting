@@ -1,0 +1,80 @@
+.calendarGrid {
+    flex: 1 1 60%;
+}
+
+.calendarTop {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.calendarTopLeft {
+
+}
+
+.dateHeader {
+    flex: 1 0 auto;
+    flex-grow: 1;
+}
+
+.dateHeader > div {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+}
+
+.calendarBottom {
+    display: flex;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.calendarLeft {
+    flex: none;
+}
+
+.displayHour {
+    position: relative;
+    height: 48px;
+}
+
+.displayHour > div {
+    position: relative;
+    text-align: right;
+    top: -6px; /* TODO: Font percentage? */
+}
+
+.calendarRight {
+    display: flex;
+    align-items: flex-start;
+    flex: 1 1 auto;
+    overflow-x: auto;
+    overflow-y: scroll;
+}
+
+.calendarRight > div {
+    display: inline-flex;
+    flex: none;
+    min-width: 100%;
+    vertical-align: top;
+}
+
+.hourHorizontalLines {
+    border-top: #dadce0 1px solid;
+}
+
+.hourHorizontalLines > div {
+    height: 48px;
+}
+
+.hourHorizontalLines > div::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    margin-top: -1px;
+    border-bottom: #dadce0 1px solid;
+}
+
+.hourRightSpacer {
+    width: 8px;
+    border-right: #dadce0 1px solid;
+}
