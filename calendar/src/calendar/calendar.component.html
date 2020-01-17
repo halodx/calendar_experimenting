@@ -3,7 +3,10 @@
     aria-readonly="true">
     <div class="calendarTop"
         role="row">
-        <div class="calendarTopLeft">GMT-8</div>
+        <div class="calendarTopLeft">
+            <!-- TODO: Need to consume correct width -->
+            TODO
+        </div>
         <ng-container *ngFor="let viewDay of viewDays; let viewDayIndex = index;">
             <div class="dateHeader"
                 role="columnheader"
@@ -25,6 +28,7 @@
                 </div>
             </ng-container>
         </div>
+        
         <div class="calendarRight"
             role="presentation"
             tabindex="-1">
@@ -37,13 +41,16 @@
                     </ng-container>
                 </div>
                 <div class="hourRightSpacer"></div>
-                <ng-container *ngFor="let viewDay of viewDays; let viewDayIndex = index;">
-                    <div role="gridcell"
-                        tabindex="-1"
-                        attr.aria-labelledby="{{'date_header_' + viewDayIndex}}">
-                        <!-- Fill height? -->
-                    </div>
-                </ng-container>
+                <div class="primaryColumns">
+                    <ng-container *ngFor="let viewDay of viewDays; let viewDayIndex = index;">
+                        <div class="primaryColumn"
+                            role="gridcell"
+                            tabindex="-1"
+                            attr.aria-labelledby="{{'date_header_' + viewDayIndex}}">
+                            <!-- Fill height? -->
+                        </div>
+                    </ng-container>
+                </div>
             </div>
         </div>
     </div>
