@@ -10,11 +10,10 @@
 
 .calendarTop {
     display: flex;
-    justify-content: space-evenly;
 }
 
 .calendarTopLeft {
-
+    width: calc(6ex + 8px); /* Width of and displayHour and hourRightSpacer */
 }
 
 .dateHeader {
@@ -25,6 +24,12 @@
     text-align: center;
     width: 100%;
     margin: 0;
+}
+
+/* Consume the space a vertical scrollbar would without being visible */
+.vertScrollbarGutter {
+    overflow-y: scroll;
+    visibility: hidden;
 }
 
 .calendarBottom {
@@ -46,6 +51,7 @@
     position: relative;
     text-align: right;
     top: -6px; /* TODO: Font percentage? */
+    width: 6ex;
 }
 
 .calendarRight {

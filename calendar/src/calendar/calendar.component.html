@@ -3,10 +3,7 @@
     aria-readonly="true">
     <div class="calendarTop"
         role="row">
-        <div class="calendarTopLeft">
-            <!-- TODO: Need to consume correct width -->
-            TODO
-        </div>
+        <div class="calendarTopLeft"></div>
         <ng-container *ngFor="let viewDay of viewDays; let viewDayIndex = index;">
             <div class="dateHeader"
                 role="columnheader"
@@ -16,6 +13,7 @@
                 <div>{{viewDay.dayNumber}}</div>
             </div>
         </ng-container>
+        <div class="vertScrollbarGutter"></div>
     </div>
     <div class="calendarBottom">
         <div class="calendarLeft"
