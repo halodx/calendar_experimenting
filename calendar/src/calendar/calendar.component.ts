@@ -1,5 +1,6 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { getLocaleDateTimeFormat } from '@angular/common';
+import { CalendarSlot } from 'app/calendarData/calendarSlot';
+
 
 @Component({
   selector: 'calendar',
@@ -13,10 +14,17 @@ export class CalendarComponent {
   @Input()
   endDate: string;
 
+  @Input()
+  hourHeight: number;
+
+  @Input()
+  slots: CalendarSlot[];
+
+  readonly displayHours = ['', '1AM', '2AM', '3AM', '4AM', '5AM', '6AM', '7AM', '8AM',
+    '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM',
+    '5PM', '6PM', '7PM', '8PM', '9PM', '10PM', '11PM'];
+
   viewDays: ViewDay[];
-  displayHours = ['1AM', '2AM', '3AM', '4AM', '5AM', '6AM', '7AM', '8AM',
-          '9AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM',
-          '5PM', '6PM', '7PM', '8PM', '9PM', '10PM', '11PM'];
 
   constructor() {
 
@@ -39,14 +47,36 @@ export class CalendarComponent {
     if (isNaN(roundedEnd)) {
       throw "Invalid endDate value: " + this.endDate;
     }
-    let roundedStartDate = new Date(roundedStart);
-    roundedStartDate.setHours(0);
-    roundedStartDate.setMinutes(0);
-    roundedStartDate.setSeconds(0);
-    let roundedEndDate = new Date(roundedEnd);
-    roundedEndDate.setHours(0);
-    roundedEndDate.setMinutes(0);
-    roundedEndDate.setSeconds(0);
+    let roundedStartDate = zeroHoursMinSec(new Date(roundedStart));
+    let roundedEndDate = zeroHoursMinSec(new Date(roundedEnd));
+
+    // Create a map of dates to slots
+    let dayToSlots: Map<number, ViewSlot[]> = new Map();
+    for (let slot of this.slots) {
+      // TODO: Handle case of multiple day event
+      let slotDay = zeroHoursMinSec(slot.startTime);
+
+      // Calculate display offset of the slot
+      // TODO: Round time to nearest 15 or 30 min?
+      let offsetHours = slot.startTime.getHours() + (slot.startTime.getMinutes() / 60) +
+        (slot.startTime.getSeconds() / 3600);
+      let offsetPx = offsetHours * this.hourHeight;
+
+      // Calculate display height of the slot
+      let heightHours = (slot.endTime.getTime() - slot.startTime.getTime()) / 3600000;
+      if (heightHours < .5) {
+        heightHours = .5;
+      }
+      let heightPx = heightHours * this.hourHeight;
+
+      let viewSlot = new ViewSlot(slot, offsetPx, heightPx);
+      let slotDays = dayToSlots.get(slotDay.getTime());
+      if (!slotDays) {
+        slotDays = [];
+      }
+      slotDays.push(viewSlot);
+      dayToSlots.set(slotDay.getTime(), slotDays);
+    }
 
     // Loop through the dates building up the view data
     let dateIter = roundedStartDate;
@@ -54,14 +84,27 @@ export class CalendarComponent {
     let newViewDays: ViewDay[] = [];
 
     while (dateIter.getTime() <= endTime) {
+      let viewSlots = dayToSlots.get(dateIter.getTime());
+
       newViewDays.push(new ViewDay(monthNames[dateIter.getMonth()],
           dayOfWeekNames[dateIter.getDay()],
           dateIter.getDate(),
-          dateIter.getFullYear()));
+          dateIter.getFullYear(),
+          viewSlots));
       dateIter.setDate(dateIter.getDate() + 1);
     }
 
     this.viewDays = newViewDays;
+  }
+
+  // Returns the ngStyle values for a ViewSlot
+  getSlotStyles(viewSlot: ViewSlot): Object {
+    return {
+      top: viewSlot.calcOffset + 'px',
+      height: viewSlot.calcHeight + 'px',
+      'background-color': viewSlot.calendarSlot.backgroundColor,
+      color: viewSlot.calendarSlot.fontColor
+    };
   }
 }
 
@@ -76,11 +119,37 @@ class ViewDay {
   dayOfWeek: string;
   dayNumber: number;
   year: number;
+  viewSlots: ViewSlot[];
 
-  constructor(month: string, dayOfWeek: string, dayNumber: number, year: number) {
+  constructor(month: string, dayOfWeek: string, dayNumber: number, year: number, viewSlots: ViewSlot[]) {
     this.month = month;
     this.dayOfWeek = dayOfWeek;
     this.dayNumber = dayNumber;
     this.year = year;
+    this.viewSlots = viewSlots;
   }
+}
+
+// Data for a slot
+// Currently not much besides input CalendarSlot, but a real implementation would need
+// some way of knowing how many other concurrent slots there are to size width.
+class ViewSlot {
+  calendarSlot: CalendarSlot
+  calcOffset: number
+  calcHeight: number
+
+  constructor(calendarSlot: CalendarSlot, calcOffset: number, calcHeight: number) {
+    this.calendarSlot = calendarSlot;
+    this.calcOffset = calcOffset;
+    this.calcHeight = calcHeight;
+  }
+}
+
+// Returns a copy of the given date with the hours minutes and seconds zeroed out.
+function zeroHoursMinSec(date: Date): Date {
+  let d = new Date(date.getTime());
+  d.setHours(0);
+  d.setMinutes(0);
+  d.setSeconds(0);
+  return d;
 }

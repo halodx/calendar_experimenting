@@ -16,13 +16,11 @@
         <div class="vertScrollbarGutter"></div>
     </div>
     <div class="calendarBottom">
-        <div class="calendarLeft"
-            aria-hidden="true"
+        <div aria-hidden="true"
             tabindex="-1">
-            <div class="displayHour"></div> <!-- Spacer for before 1AM -->
             <ng-container *ngFor="let displayHour of displayHours">
                 <div class="displayHour">
-                    <div>{{displayHour}}</div>
+                    <div [ngStyle]="{'height': hourHeight + 'px'}">{{displayHour}}</div>
                 </div>
             </ng-container>
         </div>
@@ -33,9 +31,8 @@
             <div role="row">
                 <div class="hourHorizontalLines"
                     aria-hidden="true">
-                    <div></div> <!-- Spacer for before 1AM -->
                     <ng-container *ngFor="let displayHour of displayHours">
-                        <div></div>
+                        <div [ngStyle]="{'height': hourHeight + 'px'}"></div>
                     </ng-container>
                 </div>
                 <div class="hourRightSpacer"></div>
@@ -45,7 +42,15 @@
                             role="gridcell"
                             tabindex="-1"
                             attr.aria-labelledby="{{'date_header_' + viewDayIndex}}">
-                            <!-- Fill height? -->
+                            <ng-container *ngFor="let viewSlot of viewDay.viewSlots">
+                                <div class="scheduleSlot"
+                                    role="button"
+                                    tabindex="0"
+                                    [ngStyle]="getSlotStyles(viewSlot)">
+                                    <h2>{{viewSlot.calendarSlot.subject}}</h2>
+                                    <div>{{viewSlot.calendarSlot.description}}</div>
+                                </div>
+                            </ng-container>
                         </div>
                     </ng-container>
                 </div>

@@ -39,13 +39,8 @@
     overflow-x: hidden;
 }
 
-.calendarLeft {
-
-}
-
 .displayHour {
     position: relative;
-    height: 48px; /* TODO: Make dynamic */
 }
 
 .displayHour > div {
@@ -70,10 +65,6 @@
     border-top: #dadce0 1px solid;
 }
 
-.hourHorizontalLines > div {
-    height: 48px; /* TODO: Make dynamic */
-}
-
 .hourHorizontalLines > div::after {
     content: '';
     position: absolute;
@@ -93,6 +84,28 @@
 }
 
 .primaryColumn {
+    position: relative; /* Stacking context for slots */
     flex-grow: 1;
     border-right: #dadce0 1px solid;
+}
+
+.scheduleSlot {
+    position: absolute;
+    width: calc(100% - 20px);
+    z-index: 1;
+    cursor: pointer;
+}
+
+.scheduleSlot h2 {
+    margin-top: 3px;
+    margin-bottom: 1px;
+    margin-left: 3px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.scheduleSlot div {
+    margin-left: 3px;
+    font-weight: 400;
+    font-size: 12px;
 }
