@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CalendarSlot } from 'app/calendarData/calendarSlot';
 
 
@@ -7,7 +7,7 @@ import { CalendarSlot } from 'app/calendarData/calendarSlot';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent {
+export class CalendarComponent implements OnChanges, OnInit {
   @Input()
   startDate: string;
 
@@ -30,8 +30,12 @@ export class CalendarComponent {
 
   }
 
+  ngOnInit() {
+    this.recalculateViewDays();
+  }
+
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['startDate'] || changes['endDate']) {
+    if (changes['startDate'] || changes['endDate'] || changes['slots']) {
       this.recalculateViewDays();
     }
   }
@@ -52,7 +56,7 @@ export class CalendarComponent {
 
     // Create a map of dates to slots
     let dayToSlots: Map<number, ViewSlot[]> = new Map();
-    for (let slot of this.slots) {
+    for (let slot of (this.slots || [])) {
       // TODO: Handle case of multiple day event
       let slotDay = zeroHoursMinSec(slot.startTime);
 
